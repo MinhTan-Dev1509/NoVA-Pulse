@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0f1a">
+<title>NoVA Pulse</title>
+<style>
+:root{--bg:#f2f5fb;--card:#fff;--tx:#10131c;--mut:#667090;--line:#dde2ee;--ac:#00b8d9;--ac2:#7c5cff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b0f1a;--card:#131a2b;--tx:#e8ecf7;--mut:#8791ae;--line:#212a45}}
+:root[data-theme="dark"]{--bg:#0b0f1a;--card:#131a2b;--tx:#e8ecf7;--mut:#8791ae;--line:#212a45}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--tx);font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column;max-width:560px;margin:0 auto}
+header{display:flex;align-items:center;gap:10px;padding:12px 16px}
+header b{font-size:17px;letter-spacing:.5px}header b i{font-style:normal;color:var(--ac)}
+.st{margin-left:auto;font-size:12px;color:var(--mut);display:flex;align-items:center;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;background:#2ecc71;box-shadow:0 0 8px #2ecc71}
+button{font:inherit;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:9px 14px;cursor:pointer}
+button.p{background:linear-gradient(135deg,var(--ac),var(--ac2));border:0;color:#fff;font-weight:600}
+main{flex:1;overflow-y:auto;padding:4px 16px 16px}
+section{display:none}section.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.grid .card{margin:0}
+h3{margin:0 0 8px;font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:1px;font-weight:600}
+.big{font-size:28px;font-weight:700}.mut{color:var(--mut);font-size:13px}
+.ring{position:relative;width:96px;height:96px;margin:4px auto}
+.ring svg{transform:rotate(-90deg)}.ring .v{position:absolute;inset:0;display:grid;place-items:center;font-weight:700;font-size:20px}
+.spark{width:100%;height:34px}
+nav{display:flex;border-top:1px solid var(--line);background:var(--card);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px))}
+nav button{flex:1;border:0;background:none;font-size:11px;color:var(--mut);padding:6px 2px;border-radius:10px}
+nav button.on{color:var(--ac)}nav button span{display:block;font-size:20px}
+#pair{position:fixed;inset:0;z-index:20;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center}
+#pin{font-size:30px;letter-spacing:12px;text-align:center;width:min(300px,90%);padding:12px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--tx)}
+.art{aspect-ratio:1;border-radius:20px;display:grid;place-items:center;font-size:64px;margin-bottom:12px;background:linear-gradient(135deg,var(--ac2),var(--ac))}
+.row{display:flex;align-items:center;gap:10px;justify-content:space-between}
+.ctl{display:flex;justify-content:center;gap:14px;margin:10px 0}.ctl button{width:52px;height:52px;border-radius:50%;font-size:20px;padding:0}
+input[type=range]{width:100%;accent-color:var(--ac)}
+.games{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.g{border-radius:14px;aspect-ratio:3/4;padding:8px;display:flex;align-items:flex-end;font-weight:700;font-size:12px;color:#fff;cursor:pointer;text-shadow:0 1px 4px #0008}
+.chat{display:flex;flex-direction:column;gap:8px;min-height:180px;max-height:42vh;overflow-y:auto;margin-bottom:10px}
+.b{padding:9px 12px;border-radius:14px;max-width:85%}.b.u{align-self:flex-end;background:var(--ac);color:#fff}.b.n{background:var(--bg);border:1px solid var(--line)}
+.orb{width:84px;height:84px;border-radius:50%;margin:8px auto;border:0;background:radial-gradient(circle at 30% 30%,#fff8,transparent 40%),linear-gradient(135deg,var(--ac),var(--ac2));box-shadow:0 0 30px var(--ac2);font-size:30px}
+.orb.l{animation:pl 1s infinite}@keyframes pl{50%{transform:scale(1.1);box-shadow:0 0 50px var(--ac)}}
+.sw{display:flex;gap:10px;margin:6px 0}.sw i{width:34px;height:34px;border-radius:50%;cursor:pointer;border:3px solid transparent}
+.sw i.on{border-color:var(--tx)}
+input[type=text]{width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--tx);font:inherit}
+#toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:9px 16px;border-radius:20px;font-size:13px;opacity:0;transition:.3s;pointer-events:none;z-index:30;max-width:90%;text-align:center}
+#toast.s{opacity:1}
+.tg{width:44px;height:26px;border-radius:13px;background:var(--line);position:relative;cursor:pointer;flex:none}
+.tg::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s}
+.tg.on{background:var(--ac)}.tg.on::after{left:21px}
+#qr{display:grid;place-items:center;padding:10px;background:#fff;border-radius:14px;width:170px;margin:10px auto}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00d4ff"/><stop offset="1" stop-color="#7c5cff"/></linearGradient>
+<symbol id="logo" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="#0b0f1a"/><rect x="2" y="2" width="60" height="60" rx="14" fill="none" stroke="url(#lg)" stroke-width="2"/><path d="M10 34h10l5-14 8 28 6-18 3 4h12" fill="none" stroke="url(#lg)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></symbol></defs></svg>
+
+<div id="pair">
+  <svg width="96" height="96"><use href="#logo"/></svg>
+  <h1 style="margin:0">No<span style="color:var(--ac)">VA</span> Pulse</h1>
+  <div class="mut">Nhập mã PIN 6 số hiển thị trên PC của bạn</div>
+  <input id="pin" inputmode="numeric" maxlength="6" placeholder="••••••" autocomplete="off">
+  <button class="p" id="go" style="width:min(300px,90%)">Kết nối</button>
+  <button id="demo" style="width:min(300px,90%)">Dùng thử chế độ demo</button>
+  <div class="mut" style="max-width:300px">Chưa cài trên PC? Mở PowerShell (Admin) và dán lệnh trong tab Cài đặt.</div>
+</div>
+
+<header><svg width="34" height="34"><use href="#logo"/></svg><b>No<i>VA</i> Pulse</b><div class="st"><span class="dot"></span><span id="pcname">DESKTOP-NOVA</span></div></header>
+
+<main>
+<section id="t-pulse" class="on"><div class="grid" id="widgets"></div></section>
+
+<section id="t-media">
+  <div class="card"><div class="art" id="art">🎵</div>
+  <div class="big" id="mt" style="font-size:20px">Neon Skyline</div><div class="mut" id="ma">Spotify · Aurora Waves</div>
+  <input type="range" id="prog" value="35"><div class="ctl"><button data-m="prev">⏮</button><button data-m="pp" class="p" id="pp">⏸</button><button data-m="next">⏭</button></div>
+  <div class="row"><span>🔈</span><input type="range" id="vol" value="60"><span>🔊</span></div></div>
+  <div class="mut">Tự nhận diện media đang phát trên PC (Spotify, YouTube, trình phát hệ thống).</div>
+</section>
+
+<section id="t-game">
+  <div class="row" style="margin-bottom:10px"><h3 style="margin:0">Thư viện game</h3><button id="scan">🔍 Quét PC</button></div>
+  <div class="games" id="games"></div>
+</section>
+
+<section id="t-file">
+  <div class="card"><h3>Quản lý tệp bằng AI</h3><input type="text" id="fq" placeholder="Hỏi Nova: &quot;tìm file hợp đồng tuần trước&quot;…">
+  <div id="fl" style="margin-top:10px"></div></div>
+  <div class="card"><h3>Chia sẻ nhanh qua QR</h3><div class="mut">Quét mã bằng thiết bị khác để nhận file.</div><button class="p" id="qrb" style="margin-top:8px">Tạo mã QR</button><div id="qr" hidden></div></div>
+  <div class="card"><div class="row"><div><b>Sao lưu đám mây tự động</b><div class="mut" id="bk">Lần cuối: chưa có</div></div><div class="tg on" id="bkt"></div></div></div>
+</section>
+
+<section id="t-nova">
+  <div class="card"><div class="chat" id="chat"></div>
+  <button class="orb" id="orb" title="Nói với Nova">🎙</button>
+  <div class="mut" style="text-align:center" id="hint">Chạm để nói, hoặc bật "Luôn nghe Hey Nova" bên dưới</div>
+  <div class="row" style="margin:10px 0"><span>Luôn nghe "Hey Nova!"</span><div class="tg" id="wake"></div></div>
+  <input type="text" id="cmd" placeholder="Hoặc gõ lệnh… (vd: mở Copilot)"></div>
+</section>
+
+<section id="t-set">
+  <div class="card"><h3>Giao diện</h3>
+  <div class="row"><span>Chế độ</span><button id="th">🌓 Đổi sáng/tối</button></div>
+  <div class="sw" id="sw"></div></div>
+  <div class="card"><h3>Bố cục widget</h3><div id="lay"></div></div>
+  <div class="card"><h3>Cài agent trên PC</h3><div class="mut">Dán vào PowerShell (Admin). Thay bằng link server Vercel của bạn:</div>
+  <input type="text" readonly id="ps" value="irm https://TEN-APP.vercel.app/install.ps1 | iex" onclick="this.select()"></div>
+</section>
+</main>
+
+<nav id="nav">
+<button data-t="pulse" class="on"><span>📈</span>Pulse</button><button data-t="media"><span>🎧</span>Media</button><button data-t="game"><span>🎮</span>Game</button><button data-t="file"><span>🗂</span>Tệp</button><button data-t="nova"><span>✨</span>Nova</button><button data-t="set"><span>⚙️</span>Cài đặt</button>
+</nav>
+<div id="toast"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let toastT;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('s');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('s'),2200)}
+function tab(n){$$('section').forEach(s=>s.classList.toggle('on',s.id==='t-'+n));$$('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===n))}
+$$('#nav button').forEach(b=>b.onclick=()=>tab(b.dataset.t));
+
+// Pairing (demo: any 6-digit PIN opens demo data)
+function connect(){$('#pair').style.display='none';toast('Đã kết nối PC')}
+$('#go').onclick=()=>{/^\d{6}$/.test($('#pin').value)?connect():toast('PIN gồm 6 chữ số')};
+$('#demo').onclick=connect;
+
+// Theme + layout
+const accents=['#00b8d9','#7c5cff','#ff4d8d','#2ecc71','#ff9f1a'];
+let ac=store.get('ac',accents[0]);
+function applyAc(){document.documentElement.style.setProperty('--ac',ac);$$('#sw i').forEach(i=>i.classList.toggle('on',i.dataset.c===ac))}
+accents.forEach(c=>{const i=document.createElement('i');i.style.background=c;i.dataset.c=c;i.onclick=()=>{ac=c;store.set('ac',c);applyAc()};$('#sw').appendChild(i)});applyAc();
+$('#th').onclick=()=>{const r=document.documentElement,d=r.dataset.theme==='light'||(!r.dataset.theme&&!matchMedia('(prefers-color-scheme:dark)').matches);r.dataset.theme=d?'dark':'light'};
+
+// Widgets
+const W={cpu:{n:'CPU',u:'%',c:'#00b8d9'},ram:{n:'RAM',u:'%',c:'#7c5cff'},gpu:{n:'GPU',u:'%',c:'#ff4d8d'},tmp:{n:'Nhiệt độ',u:'°C',c:'#ff9f1a',max:100}};
+let lay=store.get('lay',[{k:'cpu',on:1},{k:'ram',on:1},{k:'gpu',on:1},{k:'tmp',on:1}]);
+const H={cpu:[],ram:[],gpu:[],tmp:[]},cur={cpu:30,ram:55,gpu:20,tmp:52};
+function walk(k,lo,hi){cur[k]=Math.max(lo,Math.min(hi,cur[k]+(Math.random()-.5)*12));H[k].push(cur[k]);if(H[k].length>30)H[k].shift()}
+function render(){
+ $('#widgets').innerHTML=lay.filter(x=>x.on).map(x=>{const w=W[x.k],v=Math.round(cur[x.k]),C=2*Math.PI*40,p=v/(w.max||100);
+ const pts=H[x.k].map((y,i)=>`${i*(100/29)},${34-y/(w.max||100)*32}`).join(' ');
+ return `<div class="card"><h3>${w.n}</h3><div class="ring"><svg width="96" height="96"><circle cx="48" cy="48" r="40" fill="none" stroke="var(--line)" stroke-width="9"/><circle cx="48" cy="48" r="40" fill="none" stroke="${w.c}" stroke-width="9" stroke-linecap="round" stroke-dasharray="${C*p} ${C}"/></svg><div class="v">${v}${w.u}</div></div><svg class="spark" viewBox="0 0 100 34" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="${w.c}" stroke-width="1.5"/></svg></div>`}).join('')}
+setInterval(()=>{if(window.LIVE){render();return}walk('cpu',5,95);walk('ram',40,80);walk('gpu',3,90);walk('tmp',38,85);render()},1000);
+function drawLay(){$('#lay').innerHTML=lay.map((x,i)=>`<div class="row" style="padding:6px 0"><span>${W[x.k].n}</span><span><button data-i="${i}" data-d="-1">▲</button> <button data-i="${i}" data-d="1">▼</button> <button data-i="${i}" data-d="0">${x.on?'Ẩn':'Hiện'}</button></span></div>`).join('');
+ $$('#lay button').forEach(b=>b.onclick=()=>{const i=+b.dataset.i,d=+b.dataset.d;if(!d)lay[i].on=lay[i].on?0:1;else{const j=i+d;if(lay[j])[lay[i],lay[j]]=[lay[j],lay[i]]}store.set('lay',lay);drawLay();render()})}
+drawLay();
+
+// Media
+const tr=[['Neon Skyline','Spotify · Aurora Waves','🌆'],['Midnight Drive','YouTube Music · Kairo','🌙'],['Lo-fi Rain','Trình phát hệ thống · Mellow','🌧']];let ti=0,play=true;
+function media(){const t=tr[ti];$('#mt').textContent=t[0];$('#ma').textContent=t[1];$('#art').textContent=t[2];$('#art').style.background=`linear-gradient(135deg,hsl(${ti*90+200} 80% 55%),hsl(${ti*90+260} 80% 40%))`;$('#pp').textContent=play?'⏸':'▶'}
+$$('[data-m]').forEach(b=>b.onclick=()=>{const m=b.dataset.m;if(m==='pp')play=!play;else ti=(ti+(m==='next'?1:2))%3;media();toast('Đã gửi lệnh tới PC')});media();
+
+// Games
+let games=['Cyber Drift','Dungeon Realm','Star Forge','Pixel Arena','Hollow Night','Turbo Kart'];
+function drawG(){$('#games').innerHTML=games.map((g,i)=>`<div class="g" data-g="${g}" style="background:linear-gradient(160deg,hsl(${i*47+180} 70% 50%),hsl(${i*47+240} 60% 25%))">${g}</div>`).join('');$$('.g').forEach(e=>e.onclick=()=>toast('Đang mở '+e.dataset.g+' trên PC…'))}
+drawG();$('#scan').onclick=()=>{toast('Đang quét Steam, Epic, thư mục game…');setTimeout(()=>{games=games.concat(['Racing GT'].filter(x=>!games.includes(x)));drawG();toast('Tìm thấy '+games.length+' game')},1200)};
+
+// Files (AI suggestions, demo)
+const files=[['Downloads','38 file trùng lặp, dọn được 2,1 GB'],['Documents/Hợp đồng','5 file gần đây, chưa phân loại'],['Pictures','312 ảnh có thể gom theo sự kiện'],['Desktop','14 lối tắt cũ không dùng']];
+function drawF(q=''){$('#fl').innerHTML=files.filter(f=>(f[0]+f[1]).toLowerCase().includes(q.toLowerCase())).map(f=>`<div class="row" style="padding:8px 0;border-top:1px solid var(--line)"><div><b>📁 ${f[0]}</b><div class="mut">${f[1]}</div></div><button onclick="toast('Nova đang xử lý…')">AI dọn</button></div>`).join('')||'<div class="mut">Không có kết quả</div>'}
+drawF();$('#fq').oninput=e=>drawF(e.target.value);
+$('#qrb').onclick=()=>{const q=$('#qr');q.hidden=false;q.innerHTML='';const u='https://TEN-APP.vercel.app/s/'+Math.random().toString(36).slice(2,8);try{new QRCode(q,{text:u,width:150,height:150})}catch(e){q.textContent=u}};
+let bk=true;$('#bkt').onclick=()=>{bk=!bk;$('#bkt').classList.toggle('on',bk);if(bk){$('#bk').textContent='Lần cuối: '+new Date().toLocaleTimeString('vi-VN');toast('Đã sao lưu')}else $('#bk').textContent='Đã tắt'};
+
+// Nova
+function say(m,u){const b=document.createElement('div');b.className='b '+(u?'u':'n');b.textContent=m;$('#chat').appendChild(b);$('#chat').scrollTop=1e9;if(!u&&'speechSynthesis' in window){try{speechSynthesis.cancel();const s=new SpeechSynthesisUtterance(m);s.lang='vi-VN';speechSynthesis.speak(s)}catch(e){}}}
+function nova(t){t=t.toLowerCase().replace(/hey nova|này nova|nova/g,'').trim();if(!t)return say('Mình nghe đây!');
+ if(/copilot/.test(t)){say('Đã mở Copilot trên PC của bạn.');toast('PC: mở Copilot');window.LIVE&&sendCmd({type:'open',app:'copilot'})}
+ else if(/chatgpt|gemini/.test(t)){{window.LIVE&&sendCmd({type:'open',app:/chatgpt/.test(t)?'chatgpt':'gemini'});say('Đã mở công cụ AI bạn yêu cầu trên PC.')}}
+ else if(/cpu|ram|gpu|nhiệt/.test(t))say(`CPU ${Math.round(cur.cpu)}%, RAM ${Math.round(cur.ram)}%, GPU ${Math.round(cur.gpu)}%, nhiệt độ ${Math.round(cur.tmp)} độ C.`);
+ else if(/dừng|tạm dừng|phát|nhạc/.test(t)){play=!play;media();say(play?'Đã phát nhạc.':'Đã tạm dừng nhạc.')}
+ else if(/game/.test(t)){tab('game');say('Đây là thư viện game của bạn.')}
+ else say('Mình sẽ chuyển câu hỏi này cho Gemini khi app được nối với server Vercel.')}
+$('#cmd').onkeydown=e=>{if(e.key==='Enter'&&e.target.value.trim()){say(e.target.value,1);nova(e.target.value);e.target.value=''}};
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;let rec,always=false;
+function listen(cont){if(!SR)return toast('Trình duyệt chưa hỗ trợ giọng nói');rec=new SR();rec.lang='vi-VN';rec.continuous=cont;
+ rec.onresult=e=>{const t=e.results[e.results.length-1][0].transcript;if(cont&&!/nova/i.test(t))return;tab('nova');say(t,1);nova(t)};
+ rec.onstart=()=>$('#orb').classList.add('l');rec.onend=()=>{$('#orb').classList.remove('l');if(always)try{rec.start()}catch(e){}};try{rec.start()}catch(e){}}
+$('#orb').onclick=()=>listen(false);
+$('#wake').onclick=()=>{always=!always;$('#wake').classList.toggle('on',always);if(always)listen(true);else if(rec)rec.stop()};
+say('Xin chào, mình là Nova. Hãy nói "Hey Nova" hoặc gõ lệnh nhé!');
+if('serviceWorker' in navigator){/* PWA/APK: đăng ký service worker khi triển khai thật */}
+render();
+
+// ===== Kết nối thật: PIN -> session -> polling =====
+let TOKEN=store.get('sess',null);
+async function api(path,opt={}){const r=await fetch(path,{...opt,headers:{'Content-Type':'application/json',...(TOKEN?{Authorization:'Bearer '+TOKEN}:{})}});if(r.status===401&&TOKEN){TOKEN=null;window.LIVE=0;store.set('sess',null);$('#pair').style.display='flex'}return r.json().catch(()=>({}))}
+async function claim(){const pin=$('#pin').value;if(!/^\d{6}$/.test(pin))return toast('PIN gồm 6 chữ số');
+ try{const r=await fetch('/api/pair?action=claim',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin})});const d=await r.json();if(!r.ok)return toast(d.error||'Lỗi kết nối');
+ TOKEN=d.sessionToken;store.set('sess',TOKEN);$('#pcname').textContent=d.name;store.set('pcname',d.name);startLive()}catch(e){toast('Không kết nối được server')}}
+function startLive(){window.LIVE=1;$('#pair').style.display='none';poll()}
+async function poll(){if(!window.LIVE)return;try{const d=await api('/api/phone');$$('.dot')[0].style.background=d.online?'#2ecc71':'#e74c3c';const s=d.state;
+ if(s)for(const k of['cpu','ram','gpu','tmp'])if(s[k]!=null){cur[k]=s[k];H[k].push(s[k]);if(H[k].length>30)H[k].shift()}}catch(e){}setTimeout(poll,1500)}
+async function sendCmd(c){const d=await api('/api/phone',{method:'POST',body:JSON.stringify(c)});toast(d.ok?'Đã gửi lệnh tới PC':(d.error||'Lỗi'))}
+$('#go').onclick=claim;
+$$('[data-m]').forEach(b=>b.addEventListener('click',()=>window.LIVE&&sendCmd({type:'media',action:b.dataset.m})));
+$('#ps').value='irm '+location.origin+'/install.ps1 | iex';
+if(TOKEN){$('#pcname').textContent=store.get('pcname','PC');startLive()}
+</script></body></html>
